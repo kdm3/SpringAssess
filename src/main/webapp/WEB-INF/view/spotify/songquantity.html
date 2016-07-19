@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<meta charset="ISO-8859-1">
+<title>Ajax Demo</title>
+</head>
+<body>
+	<p>Loading data...</p>
+	<script>
+		SearchForTrack("beatles");
+​
+		function SearchForTrack(searchParameter) {
+			var request = $.get("https://api.spotify.com/v1/search?q="
+					+ searchParameter + "&type=track&limit=50");
+			request.done(function(data) {
+				var output = "<table cellspacing = 0 >";
+				console.log(data);
+				var count = 1;
+				for (var i = 0; (data.tracks.items.length-1); i++) {
+					var mins = ((data.tracks.items[i].duration_ms) / 1000) / 60;
+					var secs = parseInt(((mins % 1) * 60));
+					output += "<tr><td style=\"border: 1px solid black;\">" + count + "<td style=\"border: 1px solid black;\">" + data.tracks.items[i].name
+							+ "</td><td style=\"border: 1px solid black;\">"
+							+ parseInt(mins) + " Minutes and " + secs + " Seconds</td></tr>";
+					document.getElementById("here").innerHTML = output;
+					count++;
+				}
+			});
+			request.fail(function(jqXHR, textStatus, errorThrown) {
+				if (textStatus == 'timeout')
+					console.log('The server is not responding');
+				if (textStatus == 'error')
+					console.log(errorThrown);
+			});
+			/*request.always(function() {
+			});*/
+		}
+	</script>
+	<div id="here"></div>
+</body>
+</html>
